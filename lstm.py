@@ -16,6 +16,8 @@ from keras.layers.core import Dense
 from gensim.models.keyedvectors import KeyedVectors
 from keras import optimizers
 from keras.utils import to_categorical
+from keras import regularizers
+
 
 
 #Lectura de los datos
@@ -38,15 +40,9 @@ embeddings = KeyedVectors.load_word2vec_format('SBW-vectors-300-min5.bin', binar
 
 print("Transformamos las frases con los embeddings...")
 data_train_idx, data_dev_idx, matrix_embeddings, vocab = prepareData(data_train, data_dev, embeddings)
+
 data_train_idx = np.array(data_train_idx)
 data_dev_idx = np.array(data_dev_idx)
-
-
-#for sentence in data_train_idx:
-#	print(sentence)
-
-print(type(data_train_idx))
-
 matrix_embeddings = np.array(matrix_embeddings)
 
 
@@ -61,7 +57,11 @@ embedded_sequence = embedding_layer(sequence_input)
 #Primera convolución
 x = LSTM(units = 128)(embedded_sequence)
 x = Dropout(0.5)(x)
-x = Dense(100)(x)
+x = Dense(100, activation = "tanh", activity_regularizer=regularizers.l2(0.05))(x)
+x = Dropout(0.5)(x)
+x = Dense(75, activation = "tanh", activity_regularizer=regularizers.l2(0.05))(x)
+x = Dropout(0.5)(x)
+x = Dense(50, activation = "tanh", activity_regularizer=regularizers.l2(0.05))(x)
 x = Dropout(0.5)(x)
 
 #Una probabilidad por etiqueta
