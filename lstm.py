@@ -55,11 +55,13 @@ matrix_embeddings = np.array(matrix_embeddings)
 input_size = 50
 
 sequence_input = Input(shape = (input_size, ), dtype = 'float64')
-embedding_layer = Embedding(matrix_embeddings.shape[0], matrix_embeddings.shape[1], weights=[matrix_embeddings],trainable=True, input_length = input_size) #Trainable false
+embedding_layer = Embedding(matrix_embeddings.shape[0], matrix_embeddings.shape[1], weights=[matrix_embeddings],trainable=False, input_length = input_size) #Trainable false
 embedded_sequence = embedding_layer(sequence_input)
 
 #Primera convolución
-x = LSTM(units = 100)(embedded_sequence)
+x = LSTM(units = 128)(embedded_sequence)
+x = Dropout(0.5)(x)
+x = Dense(100)(x)
 x = Dropout(0.5)(x)
 
 #Una probabilidad por etiqueta
@@ -71,10 +73,12 @@ model.summary()
 
 model.compile(loss='categorical_crossentropy', optimizer = 'adam', metrics=['accuracy'])
 
-modelo = model.fit(x = data_train_idx, y = to_categorical(label_train,2), batch_size = 128, epochs = 10, validation_data=(data_dev_idx, to_categorical(label_dev,2)), shuffle = False)
+modelo = model.fit(x = data_train_idx, y = to_categorical(label_train,2), batch_size = 64, epochs = 20, validation_data=(data_dev_idx, to_categorical(label_dev,2)), shuffle = False)
 
+
+loss, acc = model.evaluate(x=data_dev_idx, y=to_categorical(label_dev,2), batch_size=64)
+print(loss)
+print(acc)
 
 y_pred = model.predict(data_train_idx)
-
-
 
