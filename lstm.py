@@ -57,11 +57,11 @@ embedded_sequence = embedding_layer(sequence_input)
 #Primera convolución
 x = LSTM(units = 128)(embedded_sequence)
 x = Dropout(0.5)(x)
-x = Dense(100, activation = "tanh", activity_regularizer=regularizers.l2(0.05))(x)
+x = Dense(100, activation = "tanh", activity_regularizer=regularizers.l2(0.001))(x)
 x = Dropout(0.5)(x)
-x = Dense(75, activation = "tanh", activity_regularizer=regularizers.l2(0.05))(x)
+x = Dense(75, activation = "tanh", activity_regularizer=regularizers.l2(0.001))(x)
 x = Dropout(0.5)(x)
-x = Dense(50, activation = "tanh", activity_regularizer=regularizers.l2(0.05))(x)
+x = Dense(50, activation = "tanh", activity_regularizer=regularizers.l2(0.001))(x)
 x = Dropout(0.5)(x)
 
 #Una probabilidad por etiqueta
