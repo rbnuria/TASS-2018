@@ -1,33 +1,34 @@
 import numpy as np
 
 def prepareData(train, dev, embeddings):	
-	#Almacenamiento de palabras en nuestro vocabulario
+	#Almacenamiento de palabras en nuestro vocabulario -> Añadimos al vocabulario
+	#aquellas palabras que estén en el subconjunto de los embeddings seleccionados 
+	#(200000) + 2 de padding y unkown
+
 	vocabulary = {}
 	vocabulary["PADDING"] = len(vocabulary)
 	vocabulary["UNKOWN"] = len(vocabulary)
-
-	train_idx = []
-	dev_idx = []
 
 	#Matriz de embeddings del vocabulario
 	embeddings_matrix = []
 	embeddings_matrix.append(np.zeros(300))
 	embeddings_matrix.append(np.random.uniform(-0.25, 0.25, 300))
 
+	for word in embeddings.wv.vocab:
+		vocabulary[word] = len(vocabulary)
+		#Al mismo tiempo creamos matrix de embeddings
+		embeddings_matrix.append(embeddings[word])
+
+
+	train_idx = []
+	dev_idx = []
+
 	for sentence in train:
 		wordIndices = []
 		for word in sentence:
-			#Si tenemos embedding para la palabra
-			if word in embeddings:
-				#Si ya estaba en nuestro vocabulario
-				if word in vocabulary:
-					wordIndices.append(vocabulary[word])
-					#Ya estará en embeddings
-				else:
-					vocabulary[word] = len(vocabulary)
-					wordIndices.append(vocabulary[word])
-					embeddings_matrix.append(embeddings[word])
-
+			#Si la palabra está en el vocabulario, asignamos su índice en él
+			if word in vocabulary:
+				wordIndices.append(vocabulary[word])
 			else:
 				#Padding
 				if word == "-":
@@ -42,16 +43,8 @@ def prepareData(train, dev, embeddings):
 		wordIndices = []
 		for word in sentence:
 			#Si tenemos embedding para la palabra
-			if word in embeddings:
-				#Si ya estaba en nuestro vocabulario
-				if word in vocabulary:
-					wordIndices.append(vocabulary[word])
-					#Ya estará en embeddings
-				else:
-					vocabulary[word] = len(vocabulary)
-					wordIndices.append(vocabulary[word])
-					embeddings_matrix.append(embeddings[word])
-
+			if word in vocabulary:
+				wordIndices.append(vocabulary[word])
 			else:
 				#Padding
 				if word == "-":

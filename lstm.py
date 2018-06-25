@@ -35,7 +35,7 @@ print(data_dev.shape)
 print(label_dev.shape)
 
 print("Leyendo los word embeddings...")
-embeddings = KeyedVectors.load_word2vec_format('SBW-vectors-300-min5.bin', binary=True)
+embeddings = KeyedVectors.load_word2vec_format('SBW-vectors-300-min5.bin', binary=True, limit = 200000)
 
 
 print("Transformamos las frases con los embeddings...")
@@ -45,6 +45,9 @@ data_train_idx = np.array(data_train_idx)
 data_dev_idx = np.array(data_dev_idx)
 matrix_embeddings = np.array(matrix_embeddings)
 
+print(data_train_idx.shape)
+print(data_dev_idx.shape)
+print(matrix_embeddings.shape)
 
 
 ######################Configuración parámetros
