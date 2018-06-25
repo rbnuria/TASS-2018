@@ -80,5 +80,12 @@ loss, acc = model.evaluate(x=data_dev_idx, y=to_categorical(label_dev,2), batch_
 print(loss)
 print(acc)
 
-y_pred = model.predict(data_train_idx)
-
+y_pred = model.predict(data_dev_idx, batch_size=64)
+#EMC: Esto debería estar modularizado
+label_dev_tag = ["UNSAFE" if dev==0 else "SAFE" for dev in label_dev]
+y_pred_tag = ["UNSAFE" if pred==0 else "SAFE" for pred in np.argmax(y_pred,axis=1)]
+dev_pred_tags = zip(label_dev_tag, y_pred_tag,[" ".join(data).strip(" -") for data in data_dev])
+with(open("pred_dev_output.tsv", 'w')) as f_pred_out:
+    f_pred_out.write("REAL\tPRED\n")
+    s_buff = "\n".join(["\t".join(list(label_pair)) for label_pair in dev_pred_tags])
+    f_pred_out.write(s_buff)
