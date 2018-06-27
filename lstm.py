@@ -6,7 +6,7 @@ set_random_seed(2)
 
 from read_data import readData, readEmbeddings
 from general import prepareData
-from keras.layers import Dense, Dropout, LSTM, Embedding
+from keras.layers import Dense, Dropout, LSTM, Embedding, Bidirectional
 from keras.models import Model
 from keras.layers.core import Activation
 from keras.layers import Embedding
@@ -14,6 +14,7 @@ from keras.layers import Input
 from keras.layers.core import Dropout
 from keras.layers.core import Dense
 from keras.callbacks import EarlyStopping
+from keras.initializers import glorot_normal, glorot_uniform
 from gensim.models.keyedvectors import KeyedVectors
 from keras import optimizers
 from keras.utils import to_categorical
@@ -22,15 +23,24 @@ from keras import regularizers
 
 
 #Lectura de los datos
-
+input_size = 20
 print("Leyendo datos de entrenamiento...")
-data_train, label_train = readData('tass_2018_task_4_subtask1_train_dev/SANSE_train-1.tsv')
+data_train, label_train = readData('tass_2018_task_4_subtask1_train_dev/SANSE_train-1.tsv',input_size)
+
+
+
+#a=[[t for t in data if t!='-'] for data in data_train]
+#b=[len(t) for t in a]
+#print(np.max(b))
+#print(np.mean(b))
+
+
 
 print(data_train.shape)
 print(label_train.shape)
 
 print("Leyendo datos de desarrollo...")
-data_dev, label_dev = readData('tass_2018_task_4_subtask1_train_dev/SANSE_dev-1.tsv')
+data_dev, label_dev = readData('tass_2018_task_4_subtask1_train_dev/SANSE_dev-1.tsv',input_size)
 
 print(data_dev.shape)
 print(label_dev.shape)
@@ -42,6 +52,9 @@ embeddings = KeyedVectors.load_word2vec_format('SBW-vectors-300-min5.bin', binar
 print("Transformamos las frases con los embeddings...")
 data_train_idx, data_dev_idx, matrix_embeddings, vocab = prepareData(data_train, data_dev, embeddings)
 
+
+
+
 data_train_idx = np.array(data_train_idx)
 data_dev_idx = np.array(data_dev_idx)
 matrix_embeddings = np.array(matrix_embeddings)
@@ -52,20 +65,21 @@ print(matrix_embeddings.shape)
 
 
 ######################Configuración parámetros
-input_size = 50
+
 
 sequence_input = Input(shape = (input_size, ), dtype = 'float64')
 embedding_layer = Embedding(matrix_embeddings.shape[0], matrix_embeddings.shape[1], weights=[matrix_embeddings],trainable=False, input_length = input_size) #Trainable false
 embedded_sequence = embedding_layer(sequence_input)
 
 #Primera convolución
-x = LSTM(units = 128)(embedded_sequence)
-x = Dropout(0.5)(x)
-x = Dense(100, activation = "tanh", activity_regularizer=regularizers.l2(0.001))(x)
-x = Dropout(0.5)(x)
-x = Dense(75, activation = "tanh", activity_regularizer=regularizers.l2(0.001))(x)
-x = Dropout(0.5)(x)
-x = Dense(50, activation = "tanh", activity_regularizer=regularizers.l2(0.001))(x)
+#x = LSTM(units = 512)(embedded_sequence)
+x = Bidirectional(LSTM(units = 256))(embedded_sequence)
+#x = Dropout(0.025)(x)
+x = Dense(256, activation = "relu", kernel_initializer=glorot_uniform(seed=2), activity_regularizer=regularizers.l2(0.0001))(x)
+x = Dropout(0.35)(x)
+x = Dense(128, activation = "relu", kernel_initializer=glorot_uniform(seed=2), activity_regularizer=regularizers.l2(0.001))(x)
+x = Dropout(0.35)(x)
+x = Dense(32, activation = "relu", kernel_initializer=glorot_uniform(seed=2), activity_regularizer=regularizers.l2(0.01))(x)
 x = Dropout(0.5)(x)
 
 #Una probabilidad por etiqueta
@@ -77,16 +91,16 @@ model.summary()
 
 model.compile(loss='categorical_crossentropy', optimizer = 'adam', metrics=['accuracy'])
 
-earlyStopping = EarlyStopping('loss', patience=3, mode='min')
+earlyStopping = EarlyStopping('loss', patience=5, mode='min')
 
-modelo = model.fit(x = data_train_idx, y = to_categorical(label_train,2), batch_size = 64, epochs = 30, validation_data=(data_dev_idx, to_categorical(label_dev,2)), shuffle = False, callbacks=[earlyStopping])
+modelo = model.fit(x = data_train_idx, y = to_categorical(label_train,2), batch_size = 25, epochs = 40, validation_data=(data_dev_idx, to_categorical(label_dev,2)), shuffle = False, callbacks=[earlyStopping])
 
 
-loss, acc = model.evaluate(x=data_dev_idx, y=to_categorical(label_dev,2), batch_size=64)
+loss, acc = model.evaluate(x=data_dev_idx, y=to_categorical(label_dev,2), batch_size=25)
 print(loss)
 print(acc)
 
-y_pred = model.predict(data_dev_idx, batch_size=64)
+y_pred = model.predict(data_dev_idx, batch_size=25)
 #EMC: Esto debería estar modularizado
 label_dev_tag = ["UNSAFE" if dev==0 else "SAFE" for dev in label_dev]
 y_pred_tag = ["UNSAFE" if pred==0 else "SAFE" for pred in np.argmax(y_pred,axis=1)]

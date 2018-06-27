@@ -3,7 +3,7 @@ import numpy as np
 from nltk import word_tokenize, pos_tag, ne_chunk
 
 
-def readData(url):
+def readData(url, max_length):
 	with open(url) as tsvfile:
 		reader = csv.DictReader(tsvfile, dialect='excel-tab')
 
@@ -15,9 +15,12 @@ def readData(url):
 			label = row['TAG']
 
 			vector_sentence = word_tokenize(data)
-			while(len(vector_sentence) < 50):
+			if(len(vector_sentence)>max_length):
+				vector_sentence = vector_sentence[:max_length]
+			while(len(vector_sentence) < max_length):
 				vector_sentence.append("-")
-
+			
+			
 
 			array_data.append(vector_sentence)
 
