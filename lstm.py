@@ -46,7 +46,7 @@ print(data_dev.shape)
 print(label_dev.shape)
 
 print("Leyendo los word embeddings...")
-embeddings = KeyedVectors.load_word2vec_format('SBW-vectors-300-min5.bin', binary=True, limit = 500000)
+embeddings = KeyedVectors.load_word2vec_format('SBW-vectors-300-min5.bin', binary=True)
 
 
 print("Transformamos las frases con los embeddings...")
