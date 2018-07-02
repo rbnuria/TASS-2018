@@ -6,7 +6,7 @@ set_random_seed(2)
 
 from read_data import readData, readEmbeddings
 from general import prepareData
-from keras.layers import Dense, Dropout, LSTM, Embedding, Bidirectional
+from keras.layers import Dense, Dropout, LSTM, Embedding, Bidirectional, Flatten
 from keras.models import Model
 from keras.layers.core import Activation
 from keras.layers import Embedding
@@ -72,8 +72,8 @@ embedding_layer = Embedding(matrix_embeddings.shape[0], matrix_embeddings.shape[
 embedded_sequence = embedding_layer(sequence_input)
 
 #Primera convolución
-#x = LSTM(units = 512)(embedded_sequence)
-x = Bidirectional(LSTM(units = 256))(embedded_sequence)
+x = LSTM(units = 512, return_sequences=True)(embedded_sequence)
+#x = Bidirectional(LSTM(units = 256))(embedded_sequence)
 #x = Dropout(0.025)(x)
 
 
@@ -81,7 +81,8 @@ x = Bidirectional(LSTM(units = 256))(embedded_sequence)
 x = Dense(256, activation = "relu", kernel_initializer=glorot_uniform(seed=2), activity_regularizer=regularizers.l2(0.0001))(x)
 x = Dropout(0.35)(x)
 x = Dense(128, activation = "relu", kernel_initializer=glorot_uniform(seed=2), activity_regularizer=regularizers.l2(0.001))(x)
-x = Dropout(0.35)(x)
+x = Dropout(0.5)(x)
+x = Flatten()(x)
 x = Dense(32, activation = "relu", kernel_initializer=glorot_uniform(seed=2), activity_regularizer=regularizers.l2(0.01))(x)
 x = Dropout(0.5)(x)
 
