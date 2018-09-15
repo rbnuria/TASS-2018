@@ -19,8 +19,7 @@ Please use the following citation:
 knowledge is not required for the development of an emotional classification system. Accordingly, we propose three Deep Learning models that are based on a sequence encoding layer built on a Long Short-Term Memory gated-architecture of Recurrent Neural Network. The results reached by the systems are over the average in the two Subtasks, which shows that our claim holds.
 
 
-Contact person: Eugenio Martínez Cámara, emcamara@decsai.ugr.es
-                Nuria Rodríguez Barroso, rbnuria@correo.ugr.es
+Contact person: Eugenio Martínez Cámara, emcamara@decsai.ugr.es and Nuria Rodríguez Barroso, rbnuria@correo.ugr.es
 
 https://sci2s.ugr.es/
 
@@ -35,7 +34,7 @@ Don't hesitate to send us an e-mail or report an issue, if something is broken (
 * `folder/src` -- The code of the experiments
 * `folder/src/tass_2018_task_4_subtask1_train_dev` -- Train data set subtask 1
 * `folder/src/tass_2018_task_4_subtask2_train_dev` -- Train data set subtask 2
-*  folder/src/tass_2018_task_4_subtask1_test_l1_l2` -- Test data set subtask 1
+* `folder/src/tass_2018_task_4_subtask1_test_l1_l2` -- Test data set subtask 1
 
 ## Requirements
 
