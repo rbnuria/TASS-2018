@@ -4,6 +4,10 @@ from nltk import word_tokenize, pos_tag, ne_chunk
 
 
 def readData(url, max_length):
+	'''
+		Read Train Data Set 
+	'''
+
 	with open(url) as tsvfile:
 		reader = csv.DictReader(tsvfile, dialect='excel-tab')
 
@@ -40,6 +44,9 @@ def readData(url, max_length):
 
 
 def readDataTest(url, max_length):
+	'''
+		Read Test Data Set 
+	'''
 	with open(url) as tsvfile:
 		reader = csv.DictReader(tsvfile, dialect='excel-tab')
 
@@ -69,18 +76,4 @@ def readDataTest(url, max_length):
 
 
 	return (array_data, array_id)
-
-
-def readEmbeddings(url):
-	embedding = []
-	
-	with open(url, 'r') as vecfile:
-		for line in vecfile:
-			split_line = line.split()
-			split_line = split_line[:-1]
-			embedding.append(split_line)
-	
-	#Eliminamos primera fila
-	embedding = embedding[1:]
-	return embedding
 

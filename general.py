@@ -1,9 +1,11 @@
 import numpy as np
 
 def prepareData(train, dev, embeddings):	
-	#Almacenamiento de palabras en nuestro vocabulario -> Añadimos al vocabulario
-	#aquellas palabras que estén en el subconjunto de los embeddings seleccionados 
-	#(200000) + 2 de padding y unkown
+	'''
+	Almacenamiento de palabras en nuestro vocabulario -> Añadimos al vocabulario
+	aquellas palabras que estén en el subconjunto de los embeddings seleccionados 
+	(200000) + 2 de padding y unkown
+	'''
 
 	vocabulary = {}
 	vocabulary["PADDING"] = len(vocabulary)
@@ -59,6 +61,9 @@ def prepareData(train, dev, embeddings):
 
 
 def prepareDataTest(data_test, vocabulary):
+	'''
+		Preparación de conjunto de test.
+	'''
 
 	data_test_idx = []
 
@@ -82,6 +87,10 @@ def prepareDataTest(data_test, vocabulary):
 
 
 def writeOutput(y_pred, id_, fichero):
+	'''
+		Generación de fichero de salida
+	'''
+	
 	y_pred_tag = ["UNSAFE" if pred==0 else "SAFE" for pred in np.argmax(y_pred,axis=1)]
 	output_data = zip(id_, y_pred_tag)
 
