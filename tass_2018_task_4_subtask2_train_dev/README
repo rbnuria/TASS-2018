@@ -1,0 +1,18 @@
+Subtask 2:
+  Train only with Spanish of Spain
+    * train-2.tsv (207 headlines)
+    * dev-2.tsv (48 headlines)
+  Test corpus
+  * test-B: 407 headlines not written in Spanish spoken in Spain.
+      Variety Count
+      USA     70
+      PER     56
+      VEN     60
+      ARG     52
+      COL     45
+      CHI     37
+      CUB     52
+      MEX     35
+      TOTAL  407
+  
+

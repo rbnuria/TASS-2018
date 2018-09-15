@@ -56,3 +56,36 @@ def prepareData(train, dev, embeddings):
 		dev_idx.append(np.array(wordIndices))
 
 	return (train_idx, dev_idx, embeddings_matrix, vocabulary)
+
+
+def prepareDataTest(data_test, vocabulary):
+
+	data_test_idx = []
+
+	for sentence in data_test:
+		wordIndices = []
+		for word in sentence:
+			#Si tenemos embedding para la palabra
+			if word in vocabulary:
+				wordIndices.append(vocabulary[word])
+			else:
+				#Padding
+				if word == "-":
+					wordIndices.append(vocabulary["PADDING"])
+				#Desconocida
+				else:
+					wordIndices.append(vocabulary["UNKOWN"])
+
+		data_test_idx.append(np.array(wordIndices))
+
+	return np.array(data_test_idx)
+
+
+def writeOutput(y_pred, id_, fichero):
+	y_pred_tag = ["UNSAFE" if pred==0 else "SAFE" for pred in np.argmax(y_pred,axis=1)]
+	output_data = zip(id_, y_pred_tag)
+
+	with(open(fichero, 'w')) as f_test_out:
+		s_buff = "\n".join(["\t".join(list(label_pair)) for label_pair in output_data])
+		f_test_out.write(s_buff)
+

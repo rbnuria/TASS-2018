@@ -4,13 +4,13 @@ np.random.seed(666)
 from tensorflow import set_random_seed
 set_random_seed(2)
 
-from read_data import readData, readEmbeddings
-from general import prepareData
-from keras.layers import Dense, Dropout, LSTM, Embedding, Bidirectional, Flatten
+from read_data import readData, readEmbeddings, readDataTest
+from general import prepareData, writeOutput, prepareDataTest
+from keras.layers import Dense, Dropout, LSTM, Embedding, Bidirectional
 from keras.models import Model
 from keras.layers.core import Activation
 from keras.layers import Embedding
-from keras.layers import Input
+from keras.layers import Input, Flatten
 from keras.layers.core import Dropout
 from keras.layers.core import Dense
 from keras.callbacks import EarlyStopping
@@ -25,7 +25,7 @@ from keras import regularizers
 #Lectura de los datos
 input_size = 20
 print("Leyendo datos de entrenamiento...")
-data_train, label_train = readData('tass_2018_task_4_subtask1_train_dev/SANSE_train-1.tsv',input_size)
+data_train, label_train = readData('tass_2018_task_4_subtask2_train_dev/SANSE_train-2.tsv',input_size)
 
 
 
@@ -40,10 +40,14 @@ print(data_train.shape)
 print(label_train.shape)
 
 print("Leyendo datos de desarrollo...")
-data_dev, label_dev = readData('tass_2018_task_4_subtask1_train_dev/SANSE_dev-1.tsv',input_size)
+data_dev, label_dev = readData('tass_2018_task_4_subtask2_train_dev/SANSE_dev-2.tsv',input_size)
 
 print(data_dev.shape)
 print(label_dev.shape)
+
+print("Leyendo datos de test...")
+data_test_1, id_test_1 = readDataTest('/Users/nuria/SEPLN/test-s2.tsv',input_size)
+
 
 print("Leyendo los word embeddings...")
 embeddings = KeyedVectors.load_word2vec_format('SBW-vectors-300-min5.bin', binary=True)
@@ -53,7 +57,7 @@ print("Transformamos las frases con los embeddings...")
 data_train_idx, data_dev_idx, matrix_embeddings, vocab = prepareData(data_train, data_dev, embeddings)
 
 
-
+data_test_1 = prepareDataTest(data_test_1, vocab)
 
 data_train_idx = np.array(data_train_idx)
 data_dev_idx = np.array(data_dev_idx)
@@ -104,12 +108,7 @@ loss, acc = model.evaluate(x=data_dev_idx, y=to_categorical(label_dev,2), batch_
 print(loss)
 print(acc)
 
-y_pred = model.predict(data_dev_idx, batch_size=25)
-#EMC: Esto debería estar modularizado
-label_dev_tag = ["UNSAFE" if dev==0 else "SAFE" for dev in label_dev]
-y_pred_tag = ["UNSAFE" if pred==0 else "SAFE" for pred in np.argmax(y_pred,axis=1)]
-dev_pred_tags = zip(label_dev_tag, y_pred_tag,[" ".join(data).strip(" -") for data in data_dev])
-with(open("pred_dev_output.tsv", 'w')) as f_pred_out:
-    f_pred_out.write("REAL\tPRED\n")
-    s_buff = "\n".join(["\t".join(list(label_pair)) for label_pair in dev_pred_tags])
-    f_pred_out.write(s_buff)
+y_pred_1 = model.predict(data_test_1, batch_size=25)
+
+writeOutput(y_pred_1, id_test_1, "model3_s2.txt")
+

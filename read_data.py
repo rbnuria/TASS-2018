@@ -19,11 +19,9 @@ def readData(url, max_length):
 				vector_sentence = vector_sentence[:max_length]
 			while(len(vector_sentence) < max_length):
 				vector_sentence.append("-")
-			
-			
+		
 
 			array_data.append(vector_sentence)
-
 
 
 			if label=='SAFE':
@@ -32,11 +30,45 @@ def readData(url, max_length):
 				array_labels.append(0)
 
 
+
+
 		array_data = np.array(array_data)
 		array_labels = np.array(array_labels)
 
 
 	return (array_data, array_labels)
+
+
+def readDataTest(url, max_length):
+	with open(url) as tsvfile:
+		reader = csv.DictReader(tsvfile, dialect='excel-tab')
+
+		array_data = []
+		array_labels = []
+		array_id = []
+
+		for row in reader:
+			id_ = row['ID']
+			data = row['HEADLINE']
+
+			vector_sentence = word_tokenize(data)
+			if(len(vector_sentence)>max_length):
+				vector_sentence = vector_sentence[:max_length]
+			while(len(vector_sentence) < max_length):
+				vector_sentence.append("-")
+			
+			
+
+			array_data.append(vector_sentence)
+			array_id.append(id_)
+
+
+
+		array_data = np.array(array_data)
+		array_id = np.array(array_id)
+
+
+	return (array_data, array_id)
 
 
 def readEmbeddings(url):
