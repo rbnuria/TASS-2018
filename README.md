@@ -6,12 +6,13 @@ Please use the following citation:
 
 ```
 @InProceedings{rodriguezBarroso:2018,
-  author    = {Rodr{\'i}guez Barroso, Nuria and Mart{\'i}nez C{\'a}mara, Eugenio and Herrera Triguero, Francisco},
+  author    = {Rodr{\'i}guez Barroso, Nuria and Mart{\'i}nez-C{\'a}mara, Eugenio and Herrera, Francisco},
   title     = {SCI2S at TASS 2018: Emotion Classification with Recurrent Neural Networks},
-  booktitle = {Proceedings of the 7th Workshop on Semantic Analysis at SEPLN (TASS-2018)},
+  booktitle = {Proceedings of TASS 2018: Workshop on Semantic Analysis at SEPLN (TASS 2018)},
   month     = September,
   year      = {2018},
-  pages     = {(to appear)}
+  pages     = {117-123},
+  volume 	= {2171}
 }
 ```
 
@@ -42,7 +43,7 @@ Don't hesitate to send us an e-mail or report an issue, if something is broken (
 * tensorflow 1.9.0
 * numpy 1.14.5
 * scikit-learn 0.19.1
-* Word embeddings: You have to use ...
+* Word embeddings: You have to use Spanish Billion Word Corpus and Embeddings: http://crscardellino.github.io/SBWCE/
 
 ## Installation
 
