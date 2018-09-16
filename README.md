@@ -69,7 +69,7 @@ python3 [slstm/bilstm/selstm].py
 
 ### Expected results
 
-After running the experiments, you should expect the results that are in the paper (The link will be published soon).
+After running the experiments, you should expect the results that are in the paper http://ceur-ws.org/Vol-2172/p14_sci2s_tass2018.pdf
 
 
   
