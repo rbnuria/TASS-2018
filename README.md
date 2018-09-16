@@ -12,7 +12,8 @@ Please use the following citation:
   month     = September,
   year      = {2018},
   pages     = {117-123},
-  volume 	= {2171}
+  volume    = {2172}
+  
 }
 ```
 
@@ -33,9 +34,6 @@ Don't hesitate to send us an e-mail or report an issue, if something is broken (
 **(change this as needed!)**
 
 * `folder/src` -- The code of the experiments
-* `folder/src/tass_2018_task_4_subtask1_train_dev` -- Train data set subtask 1
-* `folder/src/tass_2018_task_4_subtask2_train_dev` -- Train data set subtask 2
-* `folder/src/tass_2018_task_4_subtask1_test_l1_l2` -- Test data set subtask 1
 
 ## Requirements
 
